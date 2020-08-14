@@ -3,7 +3,7 @@ import { assert, forEachValue } from '../util'
 
 export default class ModuleCollection {
   constructor (rawRootModule) {
-    // register root module (Vuex.Store options)
+    // 注册根模块（Vuex.Store选项）
     this.register([], rawRootModule, false)
   }
 
@@ -31,6 +31,7 @@ export default class ModuleCollection {
     }
 
     const newModule = new Module(rawModule, runtime)
+    
     if (path.length === 0) {
       this.root = newModule
     } else {
@@ -38,7 +39,7 @@ export default class ModuleCollection {
       parent.addChild(path[path.length - 1], newModule)
     }
 
-    // register nested modules
+    // 注册嵌套模块
     if (rawModule.modules) {
       forEachValue(rawModule.modules, (rawChildModule, key) => {
         this.register(path.concat(key), rawChildModule, runtime)
@@ -105,11 +106,13 @@ function update (path, targetModule, newModule) {
   }
 }
 
+// 判断getters、mutations的值是否为function类型
 const functionAssert = {
   assert: value => typeof value === 'function',
   expected: 'function'
 }
 
+// 判断actions的值的类型是否为function，并且不能有key为handler的函数或对象
 const objectAssert = {
   assert: value => typeof value === 'function' ||
     (typeof value === 'object' && typeof value.handler === 'function'),
@@ -121,13 +124,11 @@ const assertTypes = {
   mutations: functionAssert,
   actions: objectAssert
 }
-
+// 判断assertTypes key值是否符合类型
 function assertRawModule (path, rawModule) {
   Object.keys(assertTypes).forEach(key => {
     if (!rawModule[key]) return
-
     const assertOptions = assertTypes[key]
-
     forEachValue(rawModule[key], (value, type) => {
       assert(
         assertOptions.assert(value),
@@ -137,6 +138,7 @@ function assertRawModule (path, rawModule) {
   })
 }
 
+// 错误提示拼接提示信息
 function makeAssertionMessage (path, key, type, value, expected) {
   let buf = `${key} should be ${expected} but "${key}.${type}"`
   if (path.length > 0) {

@@ -7,17 +7,16 @@ let Vue // bind on install
 
 export class Store {
   constructor (options = {}) {
-    // Auto install if it is not done yet and `window` has `Vue`.
-    // To allow users to avoid auto-installation in some cases,
-    // this code should be placed here. See #731
+    // 如果尚未完成，并且“window”具有“Vue”，则自动安装。
+    // 为了允许用户在某些情况下避免自动安装，应该将此代码放在这里。见#731
     if (!Vue && typeof window !== 'undefined' && window.Vue) {
       install(window.Vue)
     }
-
+    
     if (__DEV__) {
-      assert(Vue, `must call Vue.use(Vuex) before creating a store instance.`)
-      assert(typeof Promise !== 'undefined', `vuex requires a Promise polyfill in this browser.`)
-      assert(this instanceof Store, `store must be called with the new operator.`)
+      assert(Vue, `在使用Vuex之前调用Vue.use(Vuex)`)
+      assert(typeof Promise !== 'undefined', `vuex要求浏览器支持Promise polyfill`)
+      assert(this instanceof Store, `必须使用new运算符调用store`)
     }
 
     const {
@@ -49,7 +48,6 @@ export class Store {
 
     // strict mode
     this.strict = strict
-
     const state = this._modules.root.state
 
     // init root module.
@@ -331,7 +329,6 @@ function resetStoreVM (store, state, hot) {
 function installModule (store, rootState, path, module, hot) {
   const isRoot = !path.length
   const namespace = store._modules.getNamespace(path)
-
   // register in namespace map
   if (module.namespaced) {
     if (store._modulesNamespaceMap[namespace] && __DEV__) {
@@ -528,7 +525,6 @@ function unifyObjectStyle (type, payload, options) {
     payload = type
     type = type.type
   }
-
   if (__DEV__) {
     assert(typeof type === 'string', `expects string as the type, but found ${typeof type}.`)
   }

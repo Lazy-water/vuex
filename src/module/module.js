@@ -9,7 +9,7 @@ export default class Module {
     // Store the origin module object which passed by programmer
     this._rawModule = rawModule
     const rawState = rawModule.state
-
+    
     // Store the origin module's state
     this.state = (typeof rawState === 'function' ? rawState() : rawState) || {}
   }
